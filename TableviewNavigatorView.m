@@ -216,19 +216,6 @@
     } else {
         //NSLog(@"Navigator : No sections currently exist");
     }
-    
-    //NSLog(@"Cannot set complete for indexPath section %li, row %li", (long)indexPath.section, (long)indexPath.row);
-    
-    //predicate search for row item - much slower than having an organised array and going by objectAtIndex
-    /*
-    NSPredicate *getRow = [NSPredicate predicateWithFormat:@"indexPath.section == %i AND indexPath.row == %i", indexPath.section, indexPath.row];
-    NSArray *results = [self.rowViews filteredArrayUsingPredicate:getRow];
-    if (results)
-    {
-        TNRowView *resultRow = results.firstObject;
-        [resultRow setComplete:complete];
-    }
-     */
 }
 
 - (void) refreshSectionTextColours
