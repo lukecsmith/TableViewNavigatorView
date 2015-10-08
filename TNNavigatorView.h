@@ -1,12 +1,12 @@
 //
-//  TableviewNavigatorView.h
+//  TNNavigatorView.h
 //
 //  Created by Luke Smith on 26/06/2015.
 //  Copyright (c) 2015 Appgroup. All rights reserved.
 //  www.appgroup.co.uk
 
 /**
- `TableviewNavigatorView' is a subclass of `UIView' and is intended to both show a complete visual representation of the contents of a tableview, and to allow quick navigation around it.  Both the sections and rows of a UITableview are all represented by visual objects that have 3 purposes - represent each row with an item, allow the clicking on the row icon to scroll the tableview to that row, and also to represent a completion status for the row if that is required.  The rows are also highlighted to show whether they are currently visible in the main tableview.  Integration and use is designed to be as simple as possible with an existing tableview.  Row objects are contained within section objects, which can also represent the completion status of that section if required.
+ `TNNavigatorView' is a subclass of `UIView' and is intended to both show a complete visual representation of the contents of a tableview, and to allow quick navigation around it.  Both the sections and rows of a UITableview are all represented by visual objects that have 3 purposes - represent each row with an item, allow the clicking on the row icon to scroll the tableview to that row, and also to represent a completion status for the row if that is required.  The rows are also highlighted to show whether they are currently visible in the main tableview.  Integration and use is designed to be as simple as possible with an existing tableview.  Row objects are contained within section objects, which can also represent the completion status of that section if required.
  */
 
 #define RGB(r, g, b) [UIColor colorWithRed:r/255.0 green:g/255.0 blue:b/255.0 alpha:1]
@@ -15,7 +15,7 @@
 #import "TNSectionView.h"
 #import "TNRowView.h"
 
-@protocol TableviewNavigatorViewDelegate <NSObject>
+@protocol TNNavigatorViewDelegate <NSObject>
 
 @optional
 
@@ -24,9 +24,9 @@
 
 @end
 
-@interface TableviewNavigatorView : UIView <TNRowViewDelegate, TNSectionViewDelegate>
+@interface TNNavigatorView : UIView <TNRowViewDelegate, TNSectionViewDelegate>
 
-@property (nonatomic, assign) id <TableviewNavigatorViewDelegate> delegate;
+@property (nonatomic, assign) id <TNNavigatorViewDelegate> delegate;
 
 @property (nonatomic, strong) UIFont  *headingTextFont;                         //The font for section headings
 @property (nonatomic, strong) UIColor *rowVisibleComplete;                      //Colour for row items that are visible (on screen in the tableview) and 'complete'
@@ -61,7 +61,7 @@
 
 - (void) setRowAtIndexPath:(NSIndexPath*)indexPath asComplete:(BOOL)complete;
 /**
- 'setRowAtIndexPath:' allows you to change the 'complete' property of a row. This changes its colour scheme, as defined in the above colour properties.  This can be ignored if you do not have a concept of complete/incomplete rows in your tableview.  If you do, my normal way is to iterate through all the contents data that populates the tableview, get the complete value for each and pass it in here.  My data for the table also stores the indexpath it goes at.  Like this for eg :
+ 'setRowAtIndexPath:' allows you to change the 'complete' property of a row. This changes its colour scheme (by KVO), as defined in the above colour properties.  This can be ignored if you do not have a concept of complete/incomplete rows in your tableview.  If you do, my normal way is to iterate through all the contents data that populates the tableview, get the complete value for each and pass it in here.  My data for the table also stores the indexpath it goes at.  Like this for eg :
  
  for (ReportItem *item in self.reportSet.reportItems)
  {

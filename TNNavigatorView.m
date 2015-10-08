@@ -1,42 +1,41 @@
 //
-//  TableviewNavigatorView.m
+//  TNNavigatorView.m
 //
 //  Created by Luke Smith on 26/06/2015.
 //  Copyright (c) 2015 Appgroup. All rights reserved.
 //  www.appgroup.co.uk
 
-#import "TableviewNavigatorView.h"
+#import "TNNavigatorView.h"
 #import "TNExcludedView.h"
 
-@interface TableviewNavigatorView ()
+@interface TNNavigatorView ()
 
 @property (nonatomic, weak) UITableView *tableview;
-
 @property (nonatomic, strong) NSMutableArray *sectionViews;
 @property (nonatomic, strong) NSMutableArray *rowViews;
 
 @end
 
-@implementation TableviewNavigatorView
+@implementation TNNavigatorView
 
 - (void) awakeFromNib
 {
     //create default (placeholder) settings for colours, gaps etc.
-    [self setRowNotVisibleComplete:[UIColor greenColor]];
-    [self setRowVisibleComplete:[UIColor yellowColor]];
-    [self setRowNotVisibleNotComplete:[UIColor lightGrayColor]];
-    [self setRowVisibleNotComplete:RGB(213, 205, 205)];
+    self.rowNotVisibleComplete = [UIColor greenColor];
+    self.rowVisibleComplete = [UIColor yellowColor];
+    self.rowNotVisibleNotComplete = [UIColor lightGrayColor];
+    self.rowVisibleNotComplete = RGB(213, 205, 205);
     
-    [self setHeadingTextColorVisibleComplete:[UIColor yellowColor]];
-    [self setHeadingTextColorNotVisibleComplete:[UIColor greenColor]];
-    [self setHeadingTextColorVisibleNotComplete:[UIColor lightGrayColor]];
-    [self setHeadingTextColorNotVisibleNotComplete:[UIColor darkGrayColor]];
+    self.headingTextColorVisibleComplete = [UIColor yellowColor];
+    self.headingTextColorNotVisibleComplete = [UIColor greenColor];
+    self.headingTextColorVisibleNotComplete = [UIColor lightGrayColor];
+    self.headingTextColorNotVisibleNotComplete = [UIColor darkGrayColor];
     
-    [self setSectionHighlighted:[UIColor grayColor]];
-    [self setSectionNotHighlighted:[UIColor clearColor]];
-    [self setHeadingTextFont:[UIFont systemFontOfSize:12]];
-    [self setEdgeBuffer:6];
-    [self setGapInbetweenRows:1];
+    self.sectionHighlighted = [UIColor grayColor];
+    self.sectionNotHighlighted = [UIColor clearColor];
+    self.headingTextFont = [UIFont systemFontOfSize:12];
+    self.edgeBuffer = 6;
+    self.gapInbetweenRows = 1;
 }
 
 - (void) buildNavigatorWithTableview:(UITableView*)tableview headingsShown:(BOOL)headingsShown
@@ -55,7 +54,7 @@
         TNSectionView *sectionView = [[TNSectionView alloc] init];
         sectionView.sectionNo = i;
         [sectionView setUpSubviewsWithHeading:headingsShown pixelBuffer:self.edgeBuffer height:self.frame.size.height];
-        [sectionView setDelegate:self];
+        sectionView.delegate = self;
         
         //if headings required, set up the headings view
         if (headingsShown)
@@ -64,8 +63,8 @@
             {
                 sectionView.sectionHeadingLabel.text = [self.delegate headingTextForSectionNo:i];
             }
-            [sectionView.sectionHeadingLabel setFont:self.headingTextFont];
-            [sectionView.sectionHeadingLabel setTextColor:[self colourForSectionText:sectionView]];
+            sectionView.sectionHeadingLabel.font = self.headingTextFont;
+            sectionView.sectionHeadingLabel.textColor = [self colourForSectionText:sectionView];
         }
         
         [self.sectionViews addObject:sectionView];
@@ -85,8 +84,8 @@
             {
                 TNRowView *rowView = [[TNRowView alloc] init];
                 rowView.indexPath = newIndexPath;
-                [rowView setBackgroundColor:self.rowNotVisibleNotComplete];
-                [rowView setDelegate:self];
+                rowView.backgroundColor = self.rowNotVisibleNotComplete;
+                rowView.delegate = self;
                 [rows addObject:rowView];
                 [sectionView.rowsView addSubview:rowView];
             } else {
@@ -159,12 +158,12 @@
             {
                 if (row.visible != YES)
                 {
-                    [row setVisible:YES];
+                    row.visible = YES;
                 }
             } else {
                 if (row.visible != NO)
                 {
-                    [row setVisible:NO];
+                    row.visible = NO;
                 }
             }
 
@@ -178,12 +177,12 @@
         {
             if (section.highlighted == NO)
             {
-                [section setHighlighted:YES];
+                section.highlighted = YES;
             }
         } else {
             if (section.highlighted == YES)
             {
-                [section setHighlighted:NO];
+                section.highlighted = NO;
             }
         }
     }
@@ -199,12 +198,11 @@
             TNSectionView *section = [self.sectionViews objectAtIndex:indexPath.section];
             if (indexPath.row < section.allRows.count)
             {
-                id rowItem = [section.allRows objectAtIndex:indexPath.row];
-                if ([rowItem isKindOfClass:[TNRowView class]])
+                id item = [section.allRows objectAtIndex:indexPath.row];
+                if ([item isKindOfClass:[TNRowView class]])
                 {
-                    rowItem = (TNRowView*)rowItem;
-                    [rowItem setComplete:complete];
-                    //[section.sectionHeadingLabel setTextColor:[self colourForSectionText:section]];
+                    TNRowView *rowItem = (TNRowView*)item;
+                    rowItem.complete = complete;
                 }
                 return;
             } else {
@@ -222,7 +220,7 @@
 {
     for (TNSectionView *section in self.sectionViews)
     {
-        [section.sectionHeadingLabel setTextColor:[self colourForSectionText:section]];
+        section.sectionHeadingLabel.textColor = [self colourForSectionText:section];
     }
 }
 

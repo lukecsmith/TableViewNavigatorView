@@ -51,11 +51,11 @@
         //section has a heading so add both views and constraints
         self.sectionHeadingLabel = [[UILabel alloc] init];
         self.rowsView = [[UIView alloc] init];
-        [self.sectionHeadingLabel setTranslatesAutoresizingMaskIntoConstraints:NO];
-        [self.sectionHeadingLabel setNumberOfLines:0];
-        [self.sectionHeadingLabel setLineBreakMode:NSLineBreakByWordWrapping];
-        [self.sectionHeadingLabel setTextAlignment:NSTextAlignmentCenter];
-        [self.rowsView setTranslatesAutoresizingMaskIntoConstraints:NO];
+        self.sectionHeadingLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        self.sectionHeadingLabel.numberOfLines = 0;
+        self.sectionHeadingLabel.lineBreakMode = NSLineBreakByWordWrapping;
+        self.sectionHeadingLabel.textAlignment = NSTextAlignmentCenter;
+        self.rowsView.translatesAutoresizingMaskIntoConstraints = NO;
         [self addSubview:self.sectionHeadingLabel];
         [self addSubview:self.rowsView];
         subviewHeight = (height - (pixelBuffer * 2)) / 2; //height setting for subview accounts for buffers around edges
@@ -70,7 +70,7 @@
     } else {
         //no heading so just the row view filling the section area
         self.rowsView = [[UIView alloc] init];
-        [self.rowsView setTranslatesAutoresizingMaskIntoConstraints:NO];
+        self.rowsView.translatesAutoresizingMaskIntoConstraints = NO;
         [self addSubview:self.rowsView];
         subviewHeight = height - (pixelBuffer * 2);  //height setting for subview accounts for buffers around edges
         verticalConstraint = [NSString stringWithFormat:@"V:|[_rowsView(==%f)]|", subviewHeight];
@@ -87,8 +87,8 @@
     [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionAllowAnimatedContent animations:^
      {
          UIColor *backgroundColor = [weakSelf.delegate colourForSectionBackground:self];
-         [weakSelf setBackgroundColor:backgroundColor];
-         [weakSelf.sectionHeadingLabel setTextColor:[weakSelf.delegate colourForSectionText:self]];
+         weakSelf.backgroundColor = backgroundColor;
+         weakSelf.sectionHeadingLabel.textColor = [weakSelf.delegate colourForSectionText:self];
      } completion:nil];
 }
 
@@ -98,8 +98,8 @@
     [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionAllowAnimatedContent animations:^
      {
          UIColor *backgroundColor = [weakSelf.delegate colourForSectionBackground:self];
-         [weakSelf setBackgroundColor:backgroundColor];
-         [weakSelf.sectionHeadingLabel setTextColor:[weakSelf.delegate colourForSectionText:self]];
+         weakSelf.backgroundColor = backgroundColor;
+         weakSelf.sectionHeadingLabel.textColor = [weakSelf.delegate colourForSectionText:self];
      } completion:nil];
 }
 
