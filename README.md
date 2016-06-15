@@ -1,6 +1,10 @@
 # TNNavigatorView
 Allows quick navigation around a tableview, shows you where you are in the table, and shows completion status of rows and sections.
 
+You can see a working demo of TNNavigatorView on this youtube video : https://www.youtube.com/watch?v=oxlMOf4Zc1E
+
+The navigator view is the area directly above the table.  Note how the various sections are highlighted as the table is scrolled, and also how clicking on an area in the navigator will scroll the table to the requested cell.
+
 TNNavigatorView is a subclass of UIView and is intended to both show a complete visual representation of the contents of a tableview, and to allow quick navigation around the tableview.  Both the sections and rows of a UITableview are all represented by visual objects that have 3 purposes : represent each row with an item, allow the clicking on the row icon to scroll the tableview to that row, and also to represent a completion status for the row if that is required.  The rows are also highlighted to show whether they are currently visible in the main tableview.  Integration and use is designed to be as simple as possible with an existing tableview.  Row objects are contained within section objects, which can also represent the completion status of that section if required.
 
   - To use, first copy all the files from this library into your app.
@@ -32,8 +36,6 @@ TNNavigatorView is a subclass of UIView and is intended to both show a complete 
 
   - (BOOL) indexPathIsOneToExclude:(NSIndexPath*)indexPath; //excludes an indexpath so a row representative object is not made for it
    
-You can see a working demo of TNNavigatorView on this youtube video : https://www.youtube.com/watch?v=oxlMOf4Zc1E
 
-The navigator view is the area directly above the table.  Note how the various sections are highlighted as the table is scrolled, and also how clicking on an area in the navigator will scroll the table to the requested cell.
    
  
