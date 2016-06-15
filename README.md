@@ -32,5 +32,8 @@ TNNavigatorView is a subclass of UIView and is intended to both show a complete 
 
   - (BOOL) indexPathIsOneToExclude:(NSIndexPath*)indexPath; //excludes an indexpath so a row representative object is not made for it
    
+You can see a working demo of TNNavigatorView on this youtube video : https://www.youtube.com/watch?v=oxlMOf4Zc1E
+
+The navigator view is the area directly above the table.  Note how the various sections are highlighted as the table is scrolled, and also how clicking on an area in the navigator will scroll the table to the requested cell.
    
  
