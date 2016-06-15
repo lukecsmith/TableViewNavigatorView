@@ -6,7 +6,7 @@
 //  www.appgroup.co.uk
 
 /**
- `TNNavigatorView' is a subclass of `UIView' and is intended to both show a complete visual representation of the contents of a tableview, and to allow quick navigation around it.  Both the sections and rows of a UITableview are all represented by visual objects that have 3 purposes - represent each row with an item, allow the clicking on the row icon to scroll the tableview to that row, and also to represent a completion status for the row if that is required.  The rows are also highlighted to show whether they are currently visible in the main tableview.  Integration and use is designed to be as simple as possible with an existing tableview.  Row objects are contained within section objects, which can also represent the completion status of that section if required.
+ `TNNavigatorView' is a subclass of `UIView' and is intended to show a complete visual representation of the contents of a tableview, and to allow quick navigation around it.  Both the sections and rows of a UITableview are all represented by visual objects that have 3 purposes - represent each row with an item, allow the clicking on the row icon to scroll the tableview to that row, and also to represent a completion status for the row if that is required.  The rows are also highlighted to show whether they are currently visible in the main tableview.  Integration and use is designed to be as simple as possible with an existing tableview.  Row objects are contained within section objects, which can also represent the completion status of that section if required.
  */
 
 #define RGB(r, g, b) [UIColor colorWithRed:r/255.0 green:g/255.0 blue:b/255.0 alpha:1]
@@ -43,35 +43,35 @@
 @property (nonatomic, assign) CGFloat edgeBuffer;                               //pixel buffer around section objects
 @property (nonatomic, assign) CGFloat gapInbetweenRows;                         //pixel buffer inbetween row objects.  For a large tableview with lots of sections and rows, the addition of a gap here can cause some row objects to disappear if there is not enough room.
 
-
-- (void) visibleCellsChanged;
 /**
  `visibleCellsChanged' method is called by scrollviewDidScroll method within the tableview - this allows the highlighting of visible rows and sections.  You must ensure that different colours have been set in the above properties for visible / not visible sections and rows.  Something like this is all that is required, within the tableview class (UITableView is a subclass of UIScrollView) :
  
  - (void) scrollViewDidScroll:(UIScrollView *)scrollView
  {
-    [self.tableviewNavigatorView visibleCellsChanged];
+ [self.tableviewNavigatorView visibleCellsChanged];
  }
  */
+- (void) visibleCellsChanged;
 
-- (void) buildNavigatorWithTableview:(UITableView*)tableview headingsShown:(BOOL)headingsShown;
 /**
  `buildNavigatorWithTableview:' builds all of the sections and rows objects from scratch.  You pass in the tableview and everything else is done automatically.  The headings shown boolean allows you to turn on and off the showing of section headings.  Theres a further delegate method defined in the above protocol that gets the text for those section headings.
  */
+- (void) buildNavigatorWithTableview:(UITableView*)tableview headingsShown:(BOOL)headingsShown;
 
-- (void) setRowAtIndexPath:(NSIndexPath*)indexPath asComplete:(BOOL)complete;
 /**
- 'setRowAtIndexPath:' allows you to change the 'complete' property of a row. This changes its colour scheme (by KVO), as defined in the above colour properties.  This can be ignored if you do not have a concept of complete/incomplete rows in your tableview.  If you do, my normal way is to iterate through all the contents data that populates the tableview, get the complete value for each and pass it in here.  My data for the table also stores the indexpath it goes at.  Like this for eg :
+ 'setRowAtIndexPath:' allows you to change the 'complete' property of a row. This changes its colour scheme, as defined in the above colour properties.  This can be ignored if you do not have a concept of complete/incomplete rows in your tableview.  If you do, my normal way is to iterate through all the contents data that populates the tableview, get the complete value for each and pass it in here.  My data for the table also stores the indexpath it goes at.  Like this for eg :
  
  for (ReportItem *item in self.reportSet.reportItems)
  {
-    [self.tableviewNavigatorView setRowAtIndexPath:item.indexPath asComplete:[item.valid boolValue]];
+ [self.tableviewNavigatorView setRowAtIndexPath:item.indexPath asComplete:[item.valid boolValue]];
  }
  */
+- (void) setRowAtIndexPath:(NSIndexPath*)indexPath asComplete:(BOOL)complete;
 
-- (void) refreshSectionTextColours;
 /**
  'refreshSectionTextColours' simply calls to update the colour of the section text objects - generally required if you have completed a row within your table data and want to check to see if the section can also be coloured as 'complete' (ignore if you have no concept of row completion)
  */
+- (void) refreshSectionTextColours;
+
 
 @end

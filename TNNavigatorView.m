@@ -18,8 +18,8 @@
 
 @implementation TNNavigatorView
 
-- (void) awakeFromNib
-{
+- (void) awakeFromNib {
+    
     //create default (placeholder) settings for colours, gaps etc.
     self.rowNotVisibleComplete = [UIColor greenColor];
     self.rowVisibleComplete = [UIColor yellowColor];
@@ -49,18 +49,15 @@
     self.sectionViews = [NSMutableArray array];
     
     //get the number of sections count from the tableview and go through creating a section view for each
-    for (int i = 0; i < tableview.numberOfSections; i++)
-    {
+    for (int i = 0; i < tableview.numberOfSections; i++) {
         TNSectionView *sectionView = [[TNSectionView alloc] init];
         sectionView.sectionNo = i;
         [sectionView setUpSubviewsWithHeading:headingsShown pixelBuffer:self.edgeBuffer height:self.frame.size.height];
         sectionView.delegate = self;
         
         //if headings required, set up the headings view
-        if (headingsShown)
-        {
-            if ([self.delegate respondsToSelector:@selector(headingTextForSectionNo:)])
-            {
+        if (headingsShown) {
+            if ([self.delegate respondsToSelector:@selector(headingTextForSectionNo:)]) {
                 sectionView.sectionHeadingLabel.text = [self.delegate headingTextForSectionNo:i];
             }
             sectionView.sectionHeadingLabel.font = self.headingTextFont;
@@ -72,16 +69,13 @@
         
         //get the count for number of rows for this section, and add a row view for each one
         NSMutableArray *rows = [NSMutableArray array];
-        for (int j = 0; j < [tableview numberOfRowsInSection:i]; j++)
-        {
+        for (int j = 0; j < [tableview numberOfRowsInSection:i]; j++) {
             NSIndexPath *newIndexPath = [NSIndexPath indexPathForRow:j inSection:i];
             BOOL excludeRow = NO;
-            if ([self.delegate respondsToSelector:@selector(indexPathIsOneToExclude:)])
-            {
+            if ([self.delegate respondsToSelector:@selector(indexPathIsOneToExclude:)]) {
                 excludeRow = [self.delegate indexPathIsOneToExclude:newIndexPath];
             }
-            if (!excludeRow)
-            {
+            if (!excludeRow) {
                 TNRowView *rowView = [[TNRowView alloc] init];
                 rowView.indexPath = newIndexPath;
                 rowView.backgroundColor = self.rowNotVisibleNotComplete;
@@ -105,19 +99,15 @@
     [self doAutolayoutToEvenlyLayoutViews:self.sectionViews inParentView:self withEdgeBuffer:self.edgeBuffer betweenBuffer:0];
 }
 
-- (void) doAutolayoutToEvenlyLayoutViews:(NSArray*)views inParentView:(UIView*)parentView withEdgeBuffer:(CGFloat)edgeBuffer betweenBuffer:(CGFloat)betweenBuffer
-{
+- (void) doAutolayoutToEvenlyLayoutViews:(NSArray*)views inParentView:(UIView*)parentView withEdgeBuffer:(CGFloat)edgeBuffer betweenBuffer:(CGFloat)betweenBuffer {
     //create all the constraints we need to fit all those views evenly into the parent view
     NSMutableArray *constraints = [NSMutableArray array];
     UIView *previousView;
     NSString *horizontalConstraint, *verticalConstraint;
-    for (UIView *view in views)
-    {
-        if (![view isKindOfClass:[TNExcludedView class]])
-        {
+    for (UIView *view in views) {
+        if (![view isKindOfClass:[TNExcludedView class]]) {
             [view setTranslatesAutoresizingMaskIntoConstraints:NO];
-            if (!previousView)
-            {
+            if (!previousView) {
                 //no previous view so this is the first view - sticks to left hand side
                 verticalConstraint = [NSString stringWithFormat:@"V:|-%li-[view]-%li-|", (long)edgeBuffer, (long)edgeBuffer];
                 horizontalConstraint = [NSString stringWithFormat:@"H:|-%li-[view]", (long)edgeBuffer];
@@ -135,8 +125,7 @@
     }
     
     //glue the last view to the right hand side of the superview
-    if (previousView)
-    {
+    if (previousView) {
         horizontalConstraint = [NSString stringWithFormat:@"H:[previousView]-%li-|", (long)edgeBuffer];
         [constraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:horizontalConstraint options:0 metrics:nil views:NSDictionaryOfVariableBindings(previousView)]];
         
@@ -145,62 +134,46 @@
     }
 }
 
-- (void) highlightFromIndexPath:(NSIndexPath*)startIndexPath toIndexPath:(NSIndexPath*)endIndexPath
-{
+- (void) highlightFromIndexPath:(NSIndexPath*)startIndexPath toIndexPath:(NSIndexPath*)endIndexPath {
     //set the highlight property on all rows between the given indexPaths (this automatically colours them too)
-    for (TNRowView *row in self.rowViews)
-    {
-        if (![row isKindOfClass:[TNExcludedView class]])
-        {
+    for (TNRowView *row in self.rowViews) {
+        if (![row isKindOfClass:[TNExcludedView class]]) {
             //check if the given row is inbetween the startIndexPath and endIndexPath
             if ((([row.indexPath compare:startIndexPath] == NSOrderedDescending) || ([row.indexPath compare:startIndexPath] == NSOrderedSame))
-                && (([row.indexPath compare:endIndexPath] == NSOrderedAscending) || ([row.indexPath compare:endIndexPath] == NSOrderedSame)))
-            {
-                if (row.visible != YES)
-                {
+                && (([row.indexPath compare:endIndexPath] == NSOrderedAscending) || ([row.indexPath compare:endIndexPath] == NSOrderedSame))) {
+                if (row.visible != YES) {
                     row.visible = YES;
                 }
             } else {
-                if (row.visible != NO)
-                {
+                if (row.visible != NO) {
                     row.visible = NO;
                 }
             }
-
         }
     }
     
     //also set the highlight property on the section objects - this also automatically changes the colour
-    for (TNSectionView *section in self.sectionViews)
-    {
-        if ((section.sectionNo >= startIndexPath.section) && (section.sectionNo <= endIndexPath.section))
-        {
-            if (section.highlighted == NO)
-            {
+    for (TNSectionView *section in self.sectionViews) {
+        if ((section.sectionNo >= startIndexPath.section) && (section.sectionNo <= endIndexPath.section)) {
+            if (section.highlighted == NO) {
                 section.highlighted = YES;
             }
         } else {
-            if (section.highlighted == YES)
-            {
+            if (section.highlighted == YES) {
                 section.highlighted = NO;
             }
         }
     }
 }
 
-- (void) setRowAtIndexPath:(NSIndexPath*)indexPath asComplete:(BOOL)complete
-{
+- (void) setRowAtIndexPath:(NSIndexPath*)indexPath asComplete:(BOOL)complete {
     //find the row for the given indexPath and set the complete property - this automatically colours the row
-    if (self.sectionViews)
-    {
-        if (indexPath.section < self.sectionViews.count)
-        {
+    if (self.sectionViews) {
+        if (indexPath.section < self.sectionViews.count) {
             TNSectionView *section = [self.sectionViews objectAtIndex:indexPath.section];
-            if (indexPath.row < section.allRows.count)
-            {
+            if (indexPath.row < section.allRows.count) {
                 id item = [section.allRows objectAtIndex:indexPath.row];
-                if ([item isKindOfClass:[TNRowView class]])
-                {
+                if ([item isKindOfClass:[TNRowView class]]) {
                     TNRowView *rowItem = (TNRowView*)item;
                     rowItem.complete = complete;
                 }
@@ -216,16 +189,13 @@
     }
 }
 
-- (void) refreshSectionTextColours
-{
-    for (TNSectionView *section in self.sectionViews)
-    {
+- (void) refreshSectionTextColours {
+    for (TNSectionView *section in self.sectionViews) {
         section.sectionHeadingLabel.textColor = [self colourForSectionText:section];
     }
 }
 
-- (void) visibleCellsChanged
-{
+- (void) visibleCellsChanged {
     //this allows us to see which rows are currently visible in the tableview depending on scroll position.  They can then be highlighted.
     //this is normally called from the tableview's own 'scrollViewDidScroll' method
     UITableViewCell *firstObject = (UITableViewCell*)self.tableview.visibleCells.firstObject;
@@ -235,21 +205,17 @@
 
 #pragma mark TNRowViewDelegate
 
-- (UIColor*) colourForRowObject:(id)sender
-{
+- (UIColor*) colourForRowObject:(id)sender {
     //returns the UIColor thats appropriate depending on the status of visible and complete properties
     TNRowView *rowView = (TNRowView*)sender;
-    if (rowView.visible)
-    {
-        if (rowView.complete)
-        {
+    if (rowView.visible) {
+        if (rowView.complete) {
             return self.rowVisibleComplete;
         } else {
             return self.rowVisibleNotComplete;
         }
     } else {
-        if (rowView.complete)
-        {
+        if (rowView.complete) {
             return self.rowNotVisibleComplete;
         } else {
             return self.rowNotVisibleNotComplete;
@@ -257,8 +223,7 @@
     }
 }
 
-- (void) rowTouched:(id)sender
-{
+- (void) rowTouched:(id)sender {
     //calls to scroll the tableview to the corresponding actual row to the one that has been touched
     TNRowView *rowView = (TNRowView*)sender;
     [self.tableview scrollToRowAtIndexPath:rowView.indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
@@ -266,41 +231,33 @@
 
 #pragma mark TNSectionViewDelegate
 
-- (UIColor*) colourForSectionBackground:(id)sender
-{
+- (UIColor*) colourForSectionBackground:(id)sender {
     //returns the correct colour for section depending on status of the highlighted property
     TNSectionView *sectionView = (TNSectionView*)sender;
-    if (sectionView.highlighted)
-    {
+    if (sectionView.highlighted) {
         return self.sectionHighlighted;
     } else {
         return self.sectionNotHighlighted;
     }
 }
 
-- (UIColor*) colourForSectionText:(id)sender
-{
+- (UIColor*) colourForSectionText:(id)sender {
     //returns the correct colour for section text depending on status of the highlighted property
     TNSectionView *sectionView = (TNSectionView*)sender;
     BOOL complete = YES;
-    for (id item in sectionView.allRows)
-    {
-        if ([item isKindOfClass:[TNRowView class]])
-        {
+    for (id item in sectionView.allRows) {
+        if ([item isKindOfClass:[TNRowView class]]) {
             TNRowView *row = (TNRowView*)item;
-            if (!row.complete)
-            {
+            if (!row.complete) {
                 complete = NO;
                 break;
             }
         }
     }
     
-    if (complete)
-    {
+    if (complete) {
         //all rows in the section are complete
-        if (sectionView.highlighted)
-        {
+        if (sectionView.highlighted) {
             return self.headingTextColorVisibleComplete;
         } else {
             return self.headingTextColorNotVisibleComplete;
@@ -308,8 +265,7 @@
 
     } else {
         //at least one row in the section is not complete
-        if (sectionView.highlighted)
-        {
+        if (sectionView.highlighted) {
             return self.headingTextColorVisibleNotComplete;
         } else {
             return self.headingTextColorNotVisibleNotComplete;
@@ -317,8 +273,7 @@
     }
 }
 
-- (void) sectionTouched:(id)sender
-{
+- (void) sectionTouched:(id)sender {
     //calls to scroll the tableview to the corresponding section that has been touched
     TNSectionView *sectionView = (TNSectionView*)sender;
     [self.tableview scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:sectionView.sectionNo] atScrollPosition:UITableViewScrollPositionTop animated:YES];

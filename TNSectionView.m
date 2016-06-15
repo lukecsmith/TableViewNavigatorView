@@ -9,45 +9,36 @@
 
 @implementation TNSectionView
 
-- (id) init
-{
-    if (self = [super init])
-    {
+- (id) init {
+    if (self = [super init]) {
         [self addObserver:self forKeyPath:@"highlighted" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
     }
     return self;
 }
 
-- (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
-{
-    if (object == self && [keyPath isEqualToString:@"highlighted"])
-    {
-        if (self.highlighted)
-        {
+- (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    if (object == self && [keyPath isEqualToString:@"highlighted"]) {
+        if (self.highlighted) {
             [self highlightThisObject];
         } else {
             [self removeHighlight];
         }
-    } else
-    {
+    } else {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     }
 }
 
-- (void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
-{
+- (void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     [self.delegate sectionTouched:self];
     [super touchesBegan:touches withEvent:event];
 }
 
-- (void) setUpSubviewsWithHeading:(BOOL)heading pixelBuffer:(CGFloat)pixelBuffer height:(CGFloat)height
-{
+- (void) setUpSubviewsWithHeading:(BOOL)heading pixelBuffer:(CGFloat)pixelBuffer height:(CGFloat)height {
     NSMutableArray *newConstraints = [NSMutableArray array];
     NSString *verticalConstraint, *horizontalConstraint, *horizontalConstraint2;
     NSDictionary *metrics = @{@"lowPriority":@(UILayoutPriorityDefaultLow)};
     CGFloat subviewHeight;
-    if (heading)
-    {
+    if (heading) {
         //section has a heading so add both views and constraints
         self.sectionHeadingLabel = [[UILabel alloc] init];
         self.rowsView = [[UIView alloc] init];
@@ -81,30 +72,25 @@
     }
 }
 
-- (void) highlightThisObject
-{
+- (void) highlightThisObject {
     __weak TNSectionView *weakSelf = self;
-    [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionAllowAnimatedContent animations:^
-     {
+    [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionAllowAnimatedContent animations:^ {
          UIColor *backgroundColor = [weakSelf.delegate colourForSectionBackground:self];
          weakSelf.backgroundColor = backgroundColor;
          weakSelf.sectionHeadingLabel.textColor = [weakSelf.delegate colourForSectionText:self];
      } completion:nil];
 }
 
-- (void) removeHighlight
-{
+- (void) removeHighlight {
     __weak TNSectionView *weakSelf = self;
-    [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionAllowAnimatedContent animations:^
-     {
+    [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionAllowAnimatedContent animations:^ {
          UIColor *backgroundColor = [weakSelf.delegate colourForSectionBackground:self];
          weakSelf.backgroundColor = backgroundColor;
          weakSelf.sectionHeadingLabel.textColor = [weakSelf.delegate colourForSectionText:self];
      } completion:nil];
 }
 
-- (void) dealloc
-{
+- (void) dealloc {
     [self removeObserver:self forKeyPath:@"highlighted"];
 }
 
